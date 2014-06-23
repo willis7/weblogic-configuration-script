@@ -16,7 +16,7 @@ weblogic-configuration-script is a [Jython](http://www.jython.org/) set of scrip
 **[Gradle](http://www.gradle.org/)**
 
 
-## Usage
+## Usage Ant
 
 Start your project development with right foot. Proceed with **[weblogic installation](http://onlineappsdba.com/index.php/2011/12/11/how-to-install-weblogic-12c-1211-on-mac/)**, after that set everything using automated scripts, and let all your collegues with the same configuration pattern so you all can evolve it together, fixing what's needed from there.
 
@@ -39,7 +39,29 @@ Start your project development with right foot. Proceed with **[weblogic install
 	cd $WL_CONFIG_SCRIPT/cmds/sh/
 	./createVMArgsConfig.sh LOCAL SET
 	```	
+	
+## Usage Gradle
 
+1. Execute the managed server configuration, e.g. ```SET```, ```RESET``` and ```SAVE```, for SPECIFIC environments, e.g. ```LOCAL```, ```DEV```, ```HLG``` and ```PROD```, using scripts:
+
+	```shell
+	cd $WL_CONFIG_SCRIPT/gradle/
+	./gradlew.sh createManagedServerConfig -PconfigEnv=LOCAL -PconfigAction=SET
+	```
+2. Execute the managed server classpath configuration, e.g. ```SET```, ```RESET``` and ```SAVE```, for SPECIFIC environments, e.g. ```LOCAL```, ```DEV```, ```HLG``` and ```PROD```, using scripts:
+
+	```shell
+	cd $WL_CONFIG_SCRIPT/gradle/
+	./gradlew.sh createClasspathConfig -PconfigEnv=LOCAL -PconfigAction=SET
+	```	
+
+3. Execute the managed server Virtual Machine arguments configuration, e.g. ```SET```, ```RESET``` and ```SAVE```, for SPECIFIC environments, e.g. ```LOCAL```, ```DEV```, ```HLG``` and ```PROD```, using scripts:
+
+	```shell
+	cd $WL_CONFIG_SCRIPT/gradle/
+	./gradlew.sh createVMArgsConfig -PconfigEnv=LOCAL -PconfigAction=SET
+	```	
+	
 ## Setup
 
 In order to run it locally you'll need a basic server setup.
