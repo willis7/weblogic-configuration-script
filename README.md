@@ -42,6 +42,8 @@ Start your project development with right foot. Proceed with **[weblogic install
 	
 ## Usage Gradle
 
+These Gradle scripts require the ```WEBLOGIC_CLASSPATH``` environment variable to be set. This can be achieved by running the ```setWLSEnv.sh/cmd``` script found in the ```$WL_CONFIG_SCRIPT/cmds/``` directory.
+
 1. Execute the managed server configuration, e.g. ```SET```, ```RESET``` and ```SAVE```, for SPECIFIC environments, e.g. ```LOCAL```, ```DEV```, ```HLG``` and ```PROD```, using scripts:
 
 	```shell
