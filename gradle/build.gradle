@@ -1,3 +1,5 @@
+import com.oracle.wlst.WLST
+
 /*******************************************************************
  LOAD PROJECT CONFIGURATION
 
@@ -14,103 +16,70 @@ logger.quiet "Config Action --> #${configAction}#"
  PROJECT TASKS
 
  ********************************************************************/
-task cleanManagedServerConfig  {
-    group 'Weblogic Configuration'
-    description 'Cleans the Managed Server configurations'	
 
-    doLast {		
-        if( configAction == 'RESET' ){
-            logger.quiet  "Please verify if Node Manager is up and running..."
-            logger.quiet  "Cleaning Managed Server configuration..."
+tasks.withType( WLST ) {
+    debug false
+    failOnError true
+    properties "../conf/${configEnv}_wlst.properties"
+}
 
-			ant.taskdef( name: 'wlst', classname: 'weblogic.ant.taskdefs.management.WLSTTask', classpath: System.env.WEBLOGIC_CLASSPATH )
-            ant.wlst( debug: "false", failOnError: "true",
-                    properties: "../conf/${configEnv}_wlst.properties",
-                    fileName: "../wlst/serverCleanConfig.py" )
-        }
+task cleanManagedServerConfig( type: WLST ){
+    group 'Weblogic WLST'
+
+    fileName "../wlst/serverCleanConfig.py"
+}
+
+task createManagedServerConfig ( type: WLST, dependsOn: cleanManagedServerConfig ) {
+    group 'Weblogic WLST'
+
+    fileName "../wlst/serverConfig.py"
+}
+
+task bkpClasspathConfig ( type: WLST ){
+    group 'Weblogic WLST'
+
+    if( configAction == 'SET'||'SAVE' ){
+        fileName "../wlst/classpathBkpConfig.py"
+    }
+    else {
+        logger.quiet "Invalid configuration action ${configAction}"
+        return
     }
 }
 
-task createManagedServerConfig (dependsOn: cleanManagedServerConfig) {
-    group 'Weblogic Configuration'
-    description 'Configures the managed servers'
-    
-    doLast{
-        logger.quiet  "Please verify if Node Manager is up and running..."
-        logger.quiet  "Configuring Managed Server..."
-        logger.quiet  "configEnv Start..."
-        logger.quiet  "${configEnv}"
-        logger.quiet  "configEnv End..."
-        logger.quiet  "configAction Start..."
-        logger.quiet  "${configAction}"
-        logger.quiet  "configAction End..."
+task createClasspathConfig( type: WLST, dependsOn: bkpClasspathConfig ) {
+    group 'Weblogic WLST'
 
-		ant.taskdef( name: 'wlst', classname: 'weblogic.ant.taskdefs.management.WLSTTask', classpath: System.env.WEBLOGIC_CLASSPATH )
-        ant.wlst( debug: "false", failOnError: "true",
-                properties: "../conf/${configEnv}_wlst.properties",
-                fileName: "../wlst/serverConfig.py" )
+    if( configAction != 'SET' ){
+        arguments "../conf"
+        fileName "../wlst/classpathSetConfig.py"
     }
-
-}
-
-task bkpClasspathConfig {
-    group 'Weblogic Configuration'
-
-    doLast{
-        if( configAction == 'SET'||'SAVE' ){
-			ant.taskdef( name: 'wlst', classname: 'weblogic.ant.taskdefs.management.WLSTTask', classpath: System.env.WEBLOGIC_CLASSPATH )
-            ant.wlst(debug: "false", failOnError: "true",
-                    properties: "../conf/${configEnv}_wlst.properties",
-                    arguments: "../conf",
-                    fileName: "../wlst/classpathBkpConfig.py" )
-        }
+    else {
+        logger.quiet "Invalid configuration action ${configAction}"
+        return
     }
 }
 
-task createClasspathConfig ( dependsOn: bkpClasspathConfig ){
-    group 'Weblogic Configuration'
+task bkpVMArgsConfig( type: WLST ) {
+    group 'Weblogic WLST'
 
-    doLast{
-        if( configAction == 'SET' ){
-            return
-        }
-        else {
-			ant.taskdef( name: 'wlst', classname: 'weblogic.ant.taskdefs.management.WLSTTask', classpath: System.env.WEBLOGIC_CLASSPATH )
-            ant.wlst( debug: "false", failOnError: "true",
-                    properties: "../conf/${configEnv}_wlst.properties",
-                    arguments: "../conf",
-                    fileName: "../wlst/classpathSetConfig.py" )
-        }
+    if( configAction == 'SET'||'SAVE' ){
+        fileName "../wlst/vmArgsBkpConfig.py"
+    }
+    else {
+        logger.quiet "Invalid configuration action ${configAction}"
+        return
     }
 }
 
-task bkpVMArgsConfig {
-    group 'Weblogic Configuration'
+task createVMArgsConfig ( type: WLST, dependsOn: bkpVMArgsConfig ){
+    group 'Weblogic WLST'
 
-    doLast{
-        if( configAction == 'SET'||'SAVE' ){
-			ant.taskdef( name: 'wlst', classname: 'weblogic.ant.taskdefs.management.WLSTTask', classpath: System.env.WEBLOGIC_CLASSPATH )
-            ant.wlst( debug: "false", failOnError: "true",
-                    properties: "../conf/${configEnv}_wlst.properties",
-                    arguments: "../conf",
-                    fileName: "../wlst/vmArgsBkpConfig.py" )
-        }
+    if( configAction != 'SET' ){
+        fileName "../wlst/vmArgsSetConfig.py"
     }
-}
-
-task createVMArgsConfig ( dependsOn: bkpVMArgsConfig ){
-    group 'Weblogic Configuration'
-
-    doLast{
-        if( configAction == 'SET' ){
-            return
-        }
-        else {
-			ant.taskdef( name: 'wlst', classname: 'weblogic.ant.taskdefs.management.WLSTTask', classpath: System.env.WEBLOGIC_CLASSPATH )
-            ant.wlst( debug: "false", failOnError: "true",
-                    properties: "../conf/${configEnv}_wlst.properties",
-                    arguments: "../conf",
-                    fileName: "../wlst/vmArgsSetConfig.py" )
-        }
+    else {
+        logger.quiet "Invalid configuration action ${configAction}"
+        return
     }
 }

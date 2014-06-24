@@ -3,6 +3,7 @@
 ### Gradle ###
 /gradle/.gradle
 /gradle/build/
+/gradle/buildSrc/build/
 
 # Ignore Gradle GUI config
 /gradle/gradle-app.setting
@@ -70,3 +71,5 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+
+
