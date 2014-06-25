@@ -36,11 +36,14 @@ class WLST extends DefaultTask{
 
     @TaskAction
     void runWlstCommand(){
-        ant.taskdef( name: 'wlst', classname: 'weblogic.ant.taskdefs.management.WLSTTask')
+        ant.taskdef( name: 'wlst',
+                classname: 'weblogic.ant.taskdefs.management.WLSTTask',
+                classpath: System.env.WEBLOGIC_CLASSPATH )
         ant.wlst( debug: debug,
                 arguments: arguments,
                 failOnError: failOnError,
                 properties: properties,
-                fileName: fileName )
+                fileName: fileName,
+                classpath: System.env.WEBLOGIC_CLASSPATH )
     }
 }

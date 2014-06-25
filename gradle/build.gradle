@@ -42,7 +42,6 @@ task bkpClasspathConfig ( type: WLST ){
         fileName "../wlst/classpathBkpConfig.py"
     }
     else {
-        logger.quiet "Invalid configuration action ${configAction}"
         return
     }
 }
@@ -55,7 +54,6 @@ task createClasspathConfig( type: WLST, dependsOn: bkpClasspathConfig ) {
         fileName "../wlst/classpathSetConfig.py"
     }
     else {
-        logger.quiet "Invalid configuration action ${configAction}"
         return
     }
 }
@@ -67,7 +65,6 @@ task bkpVMArgsConfig( type: WLST ) {
         fileName "../wlst/vmArgsBkpConfig.py"
     }
     else {
-        logger.quiet "Invalid configuration action ${configAction}"
         return
     }
 }
@@ -79,7 +76,6 @@ task createVMArgsConfig ( type: WLST, dependsOn: bkpVMArgsConfig ){
         fileName "../wlst/vmArgsSetConfig.py"
     }
     else {
-        logger.quiet "Invalid configuration action ${configAction}"
         return
     }
 }
